@@ -1,4 +1,4 @@
-// import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -75,7 +75,43 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text('Your pet Name: $petName', style: const TextStyle(fontSize: 20.0)),
+        const SizedBox(height: 16.0),
+        Text('$moodIndicator',
+            style: TextStyle(fontSize: 30, color: _getPetColor())),
+        Icon(moodIcon, color: _getPetColor(), size: 30),
+        const SizedBox(height: 16.0),
+        Text('Happiness Level: $happinessLevel',
+            style: const TextStyle(fontSize: 20.0)),
+        Text('Hunger Level: $hungerLevel',
+            style: const TextStyle(fontSize: 20.0)),
+        Text('Energy Level: $energyLevel',
+            style: const TextStyle(fontSize: 20.0)),
       ],
     );
+  }
+
+  Color _getPetColor() {
+    if (happinessLevel > 70) {
+      return Colors.green;
+    } else if (happinessLevel >= 30) {
+      return Colors.yellow;
+    } else {
+      return Colors.red;
+    }
+  }
+
+  void _updateMood() {
+    setState(() {
+      if (happinessLevel > 70) {
+        moodIndicator = "Happy";
+        moodIcon = Icons.sentiment_satisfied_alt;
+      } else if (happinessLevel >= 30) {
+        moodIndicator = "Neutral";
+        moodIcon = Icons.sentiment_satisfied;
+      } else {
+        moodIndicator = "Unhappy";
+        moodIcon = Icons.sentiment_very_dissatisfied;
+      }
+    });
   }
 }

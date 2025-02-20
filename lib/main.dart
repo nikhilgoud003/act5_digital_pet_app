@@ -1,3 +1,6 @@
+//KOUSHIK SAI YALAMARTHI
+//NIKHIL GOUD YEMINEDI
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 
@@ -97,11 +100,6 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text('Your pet Name: $petName', style: const TextStyle(fontSize: 20.0)),
-        const SizedBox(height: 16.0),
-        CustomPaint(
-          size: const Size(100, 100),
-          painter: DiamondPainter(_getPetColor()),
-        ),
         const SizedBox(height: 16.0),
         Text('$moodIndicator',
             style: TextStyle(fontSize: 30, color: _getPetColor())),
@@ -228,24 +226,4 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
       gameWon = false;
     });
   }
-}
-
-class DiamondPainter extends CustomPainter {
-  final Color color;
-  DiamondPainter(this.color);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    var paint = Paint()..color = color;
-    var path = Path()
-      ..moveTo(size.width / 2, 0)
-      ..lineTo(size.width, size.height / 2)
-      ..lineTo(size.width / 2, size.height)
-      ..lineTo(0, size.height / 2)
-      ..close();
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(DiamondPainter oldDelegate) => oldDelegate.color != color;
 }

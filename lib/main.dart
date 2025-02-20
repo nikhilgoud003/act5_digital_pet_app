@@ -49,8 +49,12 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Digital Pet App')),
-      body: Center(
-        child: isNameSet ? _buildGameUI() : _buildNameInputScreen(),
+      body: Container(
+        color: const Color.fromARGB(
+            255, 235, 183, 183), // Set gray background color
+        child: Center(
+          child: isNameSet ? _buildGameUI() : _buildNameInputScreen(),
+        ),
       ),
     );
   }

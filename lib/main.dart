@@ -27,6 +27,7 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
   final TextEditingController _nameController = TextEditingController();
   String selectedActivity = 'Play with your pet';
   late Timer _hungerTimer;
+  Timer? _winTimer;
 
   @override
   void initState() {
@@ -37,6 +38,7 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
   @override
   void dispose() {
     _hungerTimer.cancel();
+    _winTimer?.cancel();
     super.dispose();
   }
 
@@ -85,6 +87,12 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
   }
 
   Widget _buildGameUI() {
+    if (gameOver) {
+      return _buildGameOverScreen();
+    } else if (gameWon) {
+      return _buildWinScreen();
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -184,6 +192,35 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
         moodIndicator = "Unhappy";
         moodIcon = Icons.sentiment_very_dissatisfied;
       }
+    });
+  }
+
+  Widget _buildGameOverScreen() {
+    return _buildEndScreen("Game Over!", Colors.red);
+  }
+
+  Widget _buildWinScreen() {
+    return _buildEndScreen("You Win!", Colors.green);
+  }
+
+  Widget _buildEndScreen(String message, Color color) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(message, style: TextStyle(fontSize: 30, color: color)),
+        const SizedBox(height: 20),
+        ElevatedButton(onPressed: _resetGame, child: const Text("Restart")),
+      ],
+    );
+  }
+
+  void _resetGame() {
+    setState(() {
+      happinessLevel = 50;
+      hungerLevel = 50;
+      energyLevel = 50;
+      gameOver = false;
+      gameWon = false;
     });
   }
 }

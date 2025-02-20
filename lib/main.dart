@@ -25,6 +25,20 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
   bool gameOver = false;
   bool gameWon = false;
   final TextEditingController _nameController = TextEditingController();
+  String selectedActivity = 'Play with your pet';
+  late Timer _hungerTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startHungerTimer();
+  }
+
+  @override
+  void dispose() {
+    _hungerTimer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +100,66 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
             style: const TextStyle(fontSize: 20.0)),
         Text('Energy Level: $energyLevel',
             style: const TextStyle(fontSize: 20.0)),
+        const SizedBox(height: 16.0),
+        DropdownButton<String>(
+          value: selectedActivity,
+          items: <String>['Play with your pet', 'Feed your pet', 'Give Rest']
+              .map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedActivity = newValue!;
+            });
+          },
+        ),
+        const SizedBox(height: 16.0),
+        ElevatedButton(
+          onPressed: _performActivity,
+          child: const Text('Execute Action'),
+        ),
       ],
     );
+  }
+
+  void _performActivity() {
+    switch (selectedActivity) {
+      case 'Play with your pet':
+        setState(() {
+          happinessLevel = (happinessLevel + 10).clamp(0, 100);
+          energyLevel = (energyLevel - 20).clamp(0, 100);
+        });
+        break;
+      case 'Feed your pet':
+        setState(() {
+          hungerLevel = (hungerLevel - 10).clamp(0, 100);
+          happinessLevel = (happinessLevel + 10).clamp(0, 100);
+          energyLevel = (energyLevel + 5).clamp(0, 100);
+        });
+        break;
+      case 'Give Rest':
+        setState(() {
+          energyLevel = (energyLevel + 20).clamp(0, 100);
+        });
+        break;
+    }
+    _updateMood();
+  }
+
+  void _startHungerTimer() {
+    _hungerTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      setState(() {
+        hungerLevel = (hungerLevel + 5).clamp(0, 100);
+        if (hungerLevel > 100) {
+          hungerLevel = 100;
+          happinessLevel = (happinessLevel - 20).clamp(0, 100);
+        }
+        _updateMood();
+      });
+    });
   }
 
   Color _getPetColor() {
